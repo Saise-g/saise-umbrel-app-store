@@ -1,0 +1,25 @@
+manifestVersion: 1
+id: saisuas-deemix-docker
+name: deemix
+tagline: Self hosted deezer client
+icon: https://raw.githubusercontent.com/Saise-g/saise-umbrel-app-store/refs/heads/master/saisuas-deemix-docker/icon.png
+category: media
+version: "3.3"
+port: 6596
+description: >-
+  deemix is a deezer downloader built from the ashes of Deezloader Remix. The base library (or core) can be used as a stand alone CLI app or implemented in an UI using the API.
+
+developer: RemixDev
+website: https://gitlab.com/RemixDev/deemix-gui
+submitter: Saise
+submission: https://github.com/Saise-GH/umbrel-saise-store-repo/
+repo: https://gitlab.com/Bockiii/deemix-docker
+support: https://gitlab.com/RemixDev/deemix-gui
+gallery:
+  - https://raw.githubusercontent.com/Saise-g/saise-umbrel-app-store/refs/heads/master/saiseuas-deemix-docker/screen1.png
+releaseNotes: >-
+  Deemix in a Docker container.
+
+path: ""
+defaultUsername: ""
+defaultPassword: ""
