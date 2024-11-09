@@ -1,8 +1,8 @@
 manifestVersion: 1
-id: saisuas-deemix-docker
+id: saiseuas-deemix-docker
 name: deemix
 tagline: Self hosted deezer client
-icon: https://raw.githubusercontent.com/Saise-g/saise-umbrel-app-store/refs/heads/master/saisuas-deemix-docker/icon.png
+icon: https://raw.githubusercontent.com/Saise-g/saise-umbrel-app-store/refs/heads/master/saiseuas-deemix-docker/icon.png
 category: media
 version: "3.3"
 port: 6596
@@ -12,7 +12,7 @@ description: >-
 developer: RemixDev
 website: https://gitlab.com/RemixDev/deemix-gui
 submitter: Saise
-submission: https://github.com/Saise-GH/umbrel-saise-store-repo/
+submission: https://github.com/Saise-g/saise-umbrel-app-store/
 repo: https://gitlab.com/Bockiii/deemix-docker
 support: https://gitlab.com/RemixDev/deemix-gui
 gallery:
