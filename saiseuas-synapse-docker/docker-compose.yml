@@ -1,38 +1,21 @@
-version: '3.7'
-services:
-  app_proxy:
-    environment:
-      APP_HOST: synapse_server_1
-      APP_PORT: $APP_SYNAPSE_PORT
-      PROXY_AUTH_ADD: 'false'
-    container_name: synapse_app_proxy_1
-    depends_on:
-      - server
+version: "3.8"
 
-  server:
-    image: >-
-      matrixdotorg/synapse:v1.128.0@sha256:5765b7f1bd46b3ded0a59546c8e69b33e57ef6007854791701943f0414557e39
-    restart: on-failure
-    stop_grace_period: 1m
-    entrypoint: bash
-    command: >
-      -c 'if [ ! -f /data/homeserver.yaml ]; then ./start.py generate && ./start.py migrate_config; fi;
-      sed -i "s/^server_name:.*/server_name: matrix.saisesrv.org/" /data/homeserver.yaml;
-      sed -i "s/^enable_registration_without_verification:.*/enable_registration_without_verification: true/" /data/homeserver.yaml;
-      # Forza tls: false per eventuali occorrenze (compreso il listener 8448)
-      sed -i "s/tls: *true/tls: false/g" /data/homeserver.yaml;
-      exec ./start.py'
+services:
+  synapse:
+    image: matrixdotorg/synapse:latest
+    container_name: synapse
+    restart: always
+    environment:
+      # Imposta il nome del server: deve corrispondere al dominio pubblico
+      - SYNAPSE_SERVER_NAME=saisesrv.org
+      # Report statistico (opzionale)
+      - SYNAPSE_REPORT_STATS=yes
     volumes:
+      # Mappa una directory locale per mantenere persistenti la configurazione e il database
       - ${APP_DATA_DIR}/data/synapse:/data
     ports:
-      - "8008:${APP_SYNAPSE_PORT}"
-    environment:
-      UID: '1000'
-      GID: '1000'
-      SYNAPSE_HTTP_PORT: ${APP_SYNAPSE_PORT}
-      SYNAPSE_SERVER_NAME: matrix.saisesrv.org
-      SYNAPSE_REPORT_STATS: 'yes'
-      SYNAPSE_ENABLE_REGISTRATION: 'yes'
-      SYNAPSE_NO_TLS: 'yes'
-    container_name: synapse_server_1
+      # Esponi la porta 8008 per il Client-Server API.
+      - "8008:8008"
+      # Esponi la porta 8448 per la Federazione (Matrix inter-server)
+      - "8448:8448"
 
