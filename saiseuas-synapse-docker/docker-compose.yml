@@ -10,7 +10,8 @@ services:
       - server
 
   server:
-    image: matrixdotorg/synapse:v1.128.0@sha256:5765b7f1bd46b3ded0a59546c8e69b33e57ef6007854791701943f0414557e39
+    image: >-
+      matrixdotorg/synapse:v1.128.0@sha256:5765b7f1bd46b3ded0a59546c8e69b33e57ef6007854791701943f0414557e39
     restart: on-failure
     stop_grace_period: 1m
     entrypoint: bash
@@ -18,7 +19,7 @@ services:
       -c 'if [ ! -f /data/homeserver.yaml ]; then ./start.py generate && ./start.py migrate_config; fi; 
       sed -i "s/^server_name:.*/server_name: matrix.saisesrv.org/" /data/homeserver.yaml; 
       sed -i "s/^enable_registration_without_verification:.*/enable_registration_without_verification: true/" /data/homeserver.yaml; 
-      grep -q "port: 8448" /data/homeserver.yaml || sed -i "/^listeners:/a\  - port: 8448\n    tls: true\n    bind_addresses: [\"::\"]\n    type: http\n    x_forwarded: true\n    resources:\n      - names: [federation]\n        compress: false" /data/homeserver.yaml; 
+      grep -q "port: 8448" /data/homeserver.yaml || sed -i "/^listeners:/a\  - port: 8448\n    tls: false\n    bind_addresses: [\"::\"]\n    type: http\n    x_forwarded: true\n    resources:\n      - names: [federation]\n        compress: false" /data/homeserver.yaml; 
       exec ./start.py'
     volumes:
       - ${APP_DATA_DIR}/data/synapse:/data
