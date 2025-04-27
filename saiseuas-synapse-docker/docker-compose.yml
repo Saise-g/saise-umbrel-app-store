@@ -1,0 +1,55 @@
+version: '3.7'
+services:
+  synapse:
+    image: matrixdotorg/synapse:latest
+    container_name: synapse_server_1
+    restart: on-failure
+    entrypoint: bash
+    command: >-
+      -c '
+      # Se il file di configurazione non esiste, genera la configurazione iniziale e migra
+      if [ ! -f /data/homeserver.yaml ]; then
+          ./start.py generate && ./start.py migrate_config;
+      fi;
+      
+      # Imposta il server_name a matrix.saisesrv.org
+      sed -i "s/^server_name:.*/server_name: matrix.saisesrv.org/" /data/homeserver.yaml;
+      
+      # Abilita la registrazione senza verifica
+      if grep -q "^enable_registration_without_verification:" /data/homeserver.yaml; then
+         sed -i "s/^enable_registration_without_verification:.*/enable_registration_without_verification: true/" /data/homeserver.yaml;
+      else
+         echo "enable_registration_without_verification: true" >> /data/homeserver.yaml;
+      fi;
+      
+      # Aggiungi il listener sulla porta 8448 per la federazione se non presente
+      if ! grep -q "port: 8448" /data/homeserver.yaml; then
+         cat <<'EOF' >> /data/homeserver.yaml
+
+- port: 8448
+  tls: true
+  bind_addresses: ["::"]
+  type: http
+  x_forwarded: true
+  resources:
+    - names: [federation]
+      compress: false
+EOF
+      fi;
+      
+      # Avvia il server Synapse
+      exec ./start.py
+      '
+    volumes:
+      - ${APP_DATA_DIR}/data/synapse:/data
+    ports:
+      - "8008:8008"
+    environment:
+      UID: '1000'
+      GID: '1000'
+      SYNAPSE_HTTP_PORT: ${APP_SYNAPSE_PORT}
+      SYNAPSE_SERVER_NAME: matrix.saisesrv.org
+      SYNAPSE_REPORT_STATS: 'yes'
+      SYNAPSE_ENABLE_REGISTRATION: 'yes'
+      SYNAPSE_NO_TLS: 'yes'
+
