@@ -8,10 +8,12 @@ services:
     entrypoint: "bash"
     command: "-c './start.py generate && ./start.py migrate_config && echo -e \"\nenable_registration_without_verification: true\" >> /data/homeserver.yaml && exec ./start.py'"
     environment:
-      # Imposta il nome del server: deve corrispondere al dominio pubblico
-      - SYNAPSE_SERVER_NAME=saisesrv.org
-      # Report statistico (opzionale)
-      - SYNAPSE_REPORT_STATS=yes
+      UID: "1000"
+      GID: "1000"
+      SYNAPSE_SERVER_NAME: "${APP_HIDDEN_SERVICE}"
+      SYNAPSE_REPORT_STATS: "yes"
+      SYNAPSE_ENABLE_REGISTRATION: "yes"
+      SYNAPSE_NO_TLS: "yes"
     volumes:
       # Mappa una directory locale per mantenere persistenti la configurazione e il database
       - ${APP_DATA_DIR}/data/synapse:/data
