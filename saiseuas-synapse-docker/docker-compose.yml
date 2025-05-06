@@ -5,6 +5,8 @@ services:
     image: matrixdotorg/synapse:latest
     container_name: synapse
     restart: always
+    entrypoint: "bash"
+    command: "-c './start.py generate && ./start.py migrate_config && echo -e \"\nenable_registration_without_verification: true\" >> /data/homeserver.yaml && exec ./start.py'"
     environment:
       # Imposta il nome del server: deve corrispondere al dominio pubblico
       - SYNAPSE_SERVER_NAME=saisesrv.org
